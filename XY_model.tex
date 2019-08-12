@@ -1,0 +1,224 @@
+\documentclass[UTF8]{ctexart}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subfigure}
+\usepackage{setspace}
+\geometry{left=2.0cm,right=2.0cm,bottom=1cm}
+\title{Notes on XY model}
+\renewcommand\contentsname{content}
+
+\begin{document}
+\tableofcontents
+\maketitle
+\section{Discription}
+The Hamiltonian of XY model is:
+\begin{equation}
+\label{1}
+\mathcal{H}=-J\sum_{i}(S_i^+S_{i+1}^-+c.c)-B\sum_{i}S_i^z,
+\end{equation}
+For the sake of simplicification, I set $B=0$.
+\section{Symmetry}
+It's easy to verify that $\mathcal{H}$ commutes with $\sum_{i}S_i^z$, that is $[\mathcal{H},\sum_{i}S_i^z]=0$. What's more, even a magnetic field is applied to direction z, system still has $U(1)$ symmetry, which means the rotation on the X-Y plane. If we let $M+1=1$(M is the total number of spins), then system also has translation symmetry, which means operator $P$ commutes with $\mathcal{H}$.
+\section{Exact Diagonalization}
+It's a good method to classify the state according to the value of $\sum_{i}S_i^z$, $\sum_{i}S_i^z\in\{-M/2,\ldots,M/2\}$. We use the spin to mark the state, so every state has a definate $\sum_{i}S_i^z$. Come to computation, I use a bool variable to represent the spin on site. As a result, a state can be represented by a binary number. $\sum_{i}S_i^z$ equals to $2L-M$(L is the number of 1 in the binary number). The total number of the states is $2^M$, which can be represented by $\{0,1,\ldots,2^M-1\}$. Fistly, we can calculate $\sum_{i}S_i^z$ of all states and divide them into different classes. After these process, we divide the Hilbert space into M+1 subspaces. Then, we can calculate the matrix form of Hamiltonian in every subspace. Finally, we just diagonal the $M+1$ Hamiltonian matrix and get the eigen energy. The biggest subspace has dimension of $C^{2^M}_{2^{M/2}}$. With M increasing, diagonalization becomes harder and harder, whcih means ED can just apply to small system. But that does not mean ED is useless, it gives us some meaningful result to compare with other method.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{ED.png}
+	\caption{ED result(set J=1,M=10)}
+	\label{fig_1}
+\end{figure}
+The figure shows that ground state is in the subspace where $\sum_{i}S_i^z=0$.
+\section{Analytical Method}
+\subsection{Jordan-Wignar transform}
+The spin operator on different sites commute, and all commutation relations are: $[S_i^{\alpha},S_j^{\beta}]=i\delta_{ij}\epsilon_{\alpha\beta\gamma}S_i^\gamma$. The main idea of J-W transform is to represent spin operators with fermion operators. The transform details are as below:
+\begin{subequations}
+\begin{align}
+\label{2}
+S_i^+&=e^{i\pi\sum_{j<i}c_j^+c_j}c_i,\\
+S_i^-&=e^{i\pi\sum_{j<i}c_j^+c_j}c_i^+,\\
+S_i^z&=\frac{1}{2}-c_i^+c_i
+\end{align}
+\end{subequations}
+\par
+I don't want to discuss the algebra knowledge under J-W transform here.
+\subsection{Hamiltonian}
+Under the periodic boundary condition, the Hamiltonian is :
+\begin{equation}
+\label{3}
+\mathcal{H}=-J\sum_{i=1}^{M-1}(S_i^+S_{i+1}^-+c.c)-J(S_M^+S_1^-+c.c)-B\sum_{i}S_i^z,
+\end{equation}
+By using J-W transform, Hamiltonian can be rewritten as:
+\begin{equation}
+\mathcal{H}=J\sum_{i=1}^{M-1}(c_ic_{i+1}^++c.c)-J(e^{i\pi\sum_{j}c_j^+c_j}c_Mc_1^++c.c)+B\sum_{i}c_i^+c_i-B\frac{M}{2},
+\end{equation}
+The parity operator has two different eigen values, so we calssify the Hilbert space according to this.
+\subsubsection{even sector}
+If we set $c_{M+1}=-c_1$, then the Hamiltonian is :
+\begin{equation}
+\label{5}
+\mathcal{H}=J\sum_{i=1}^{M}(c_ic_{i+1}^++c.c)+B\sum_{i}c_i^+c_i-B\frac{M}{2},
+\end{equation}
+let:$c_i=\frac{1}{\sqrt{M}}\sum_{k}e^{ikn_i}c_k$, $k=\frac{(2m+1)\pi}{M}$, where $m=\{-\frac{M}{2},\ldots,\frac{M}{2}-1\}$(we set M an even number).
+\par
+Then the Hamiltonian can be simplified as:
+\begin{equation}
+\mathcal{H}=-2J\sum_{k}coskc_k^+c_k+B\sum_{k}c_k^+c_k-const,
+\label{6}
+\end{equation}
+Because $S_i^z=\frac{1}{2}-c_i^+c_i$, $\sum_{i}S_i^z=\frac{M}{2}-\sum_{i}c_i^+c_i=\frac{M}{2}-\sum_{k}c_k^+c_k$. As a result, $\sum_{k}c_k^+c_k=-(\sum_{i}S_i^z-\frac{M}{2})=M-(\sum_{i}S_i^z+\frac{M}{2})$, and parity needs $\sum_{k}c_k^+c_k$ is an even number. So we can calculate the eigen energy in the subspace where $\sum_{i}S_i^z+\frac{M}{2}={0,2,\ldots,M}$. To compare with the ED results, we can calculate the ground state of subspace which satisfy the condition mentioned before(M=10). For example, when $(\sum_{i}S_i^z+\frac{M}{2})=0$, $\sum_{k}c_k^+c_k=M$, so ground state energy is 0....
+\subsubsection{odd sector}
+The Hamiltonian is the same as equ.\ref{6}, the thing that only change is that $k=\frac{2m\pi}{M}$.
+\subsection{Result}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{EDc.png}
+	\caption{ED result and analytical ground energy(set J=1,M=10)}
+	\label{fig_2}
+\end{figure}
+\section{Correlation Function of ground state}
+Because the $U(1)$ symmetry, it's the same to calculate $<S_i^xS_j^x>$ as $<S_i^yS_j^y>$, and owing to translation symmetry, all correlation can be expressed as $<S_0^xS_j^x>$. Since $S_0^xS_i^x=\frac{1}{4}(S_0^++S_0^-)(S_i^++S_i^-)$ and for ground state $<S_0^+S_i^+>=<S_0^-S_i^->=0$, so $<S_0^xS_i^x>=\frac{1}{4}(<S_0^+S_i^->+<S_0^-S_i^+>)$.
+\subsection{Majorana fermion}
+Put a transform on ${c_i,c_i^+}$, which is :
+\begin{subequations}
+\begin{align}
+\alpha_i&=c_i^++c_i,\\
+\beta_i&=c_i^+-c_i,
+\label{7}
+\end{align}
+\end{subequations}
+$\alpha_i$ becomes a pure real operator while $\beta_i$ becomes a pure image operator. It seems that one fermion is devided to two half fermions. We will see why this transform is so important next subsection. From equ.\ref{7}, it's easy to varify that $\alpha_i\alpha_i=\beta_i\beta_i=1$ and $\alpha_i\beta_i=1-2c_i^+c_i$.
+\subsection{Simplification}
+\begin{equation}
+\label{8}
+<S_0^+S_i^->=<c_0c_i^+e^{i\pi\sum_{j<i}c_j^+c_j}>,
+\end{equation}
+It's a hard way to calculate equ.\ref{8} directly. But if we use the transform metioned before, equ.\ref{8} could be simplified as:
+\begin{equation}
+\label{9}
+S_0^xS_i^x=\frac{1}{4}(S_0^++S_0^-)(S_i^++S_i^-)=\frac{1}{4}<\beta_0\ldots\alpha_{i-1}\beta_{i-1}\alpha_i>,
+\end{equation}
+\subsection{Pfaffian}
+The Pfaffian for a $2n\times2n$ skew-symmetric matrix is defined as:
+\begin{equation}
+\label{10}
+Pf(A)=\frac{1}{2^nn!}\sum_{\sigma \in S_{2n}}sgn(\sigma)\prod_i^na_{{\sigma(2i-1)},\sigma(2i)},
+\end{equation}
+Because swap between $2i-1$ and $2i$, $a_{\sigma(2i-1),\sigma(2i)}$ will give a minus. But $sgn(\sigma)$ gives another minus, so the value stay unchanged. The parameter $2^n$ is to eliminate this repeat. $n!$ is to eliminate the swap between $\{\sigma(2i-1),\sigma(2i)\}$ and $\{\sigma(2j-1),\sigma(2j)\}$.By using wick theorem, equ.\ref{9} can be written as a Pfaffian of a matrix. That is:
+\begin{equation}
+\label{11}
+S_0^xS_i^x=\frac{1}{4}Pf
+\begin{pmatrix}
+0&<\beta_0\alpha_1>&<\beta_0\beta_1>&\ldots&\ldots\\
+*&0&<\alpha_1\beta_1>&<\alpha_1\alpha_2>&\ldots\\
+\ldots&\ldots&\ldots&\ldots&\ldots\\
+\ldots&\ldots&\ldots&\ldots&\ldots\\
+\ldots&\ldots&\ldots&\ldots&\ldots
+\end{pmatrix}
+\end{equation} 
+Further, for an arbitrary $2n\times2n$ real or complex matrix B:
+\begin{equation}
+\label{12}
+Pf(BAB^T)=det(B)Pf(A)
+\end{equation}
+For a tridiagonal matrix, Pfaffian is :
+\begin{equation}
+\label{13}
+Pf
+\begin{pmatrix}
+0&a_1& & & & &\\
+-a_1&0&b_1& & & &\\
+ &-b_1&0&a_2& & &\\
+ & &-a_2&\ddots&\ddots& &\\
+ & & &\ddots&0&b_{n-1}& \\
+ & & & &-b_{n-1}&0&a_n\\
+ & & & & &-a_n&0
+\end{pmatrix}
+=\prod_ia_i
+\end{equation}
+Every $2n\times2n$ skew matrix can be transformed into tridiagonal matrix by using elementary transformations.
+\subsubsection{Guassian elimination}
+A $n\times n$ matrix of the form:
+\begin{equation}
+\label{14}
+M_k=E_n-\alpha_k(e_k^{(n)})^T,
+\end{equation}
+where $E_n$ is the $n\times n$ identity matrix and $e_k^{(n)}$ the k-th unit vector in $\mathcal{C}^n$, is called a Guass transformation. A Gauss transformation can thus be used to zero the entries in a column or row of A below a chosen point k. In order to avoid divisions by a small number of zero, a permutation $P_k$ interchangeing entry k with another nonzero, typically the largest entry in the k+1...n is performed.
+\begin{equation}
+T=M_{n-1}P_{n-1}\ldots M_2P_2AP_2^TM_2^T\ldots P_{n-1}^TM_{n-1}^T,
+\label{14}
+\end{equation}
+where T is a tridiagonal matrix and $P$ represents the pivot matrix and it's not hard to verify that $det(P)=-1$,$det(M)=1$.
+\section{Result}
+The main work is to calculate $<\beta_i\alpha_j>,<\alpha_i\beta_j>,<\beta_i\beta_j>,<\alpha_i\alpha_j>$ for $i\le j$. Because $\beta_i\alpha_j=(c_i^+-c_i)(c_j^++c_j)=c_i^+c_j-c_ic_j^+$, the problem becomes calculating $<c_i^+c_j>$ and $<c_ic_j^+>$.${c_i,c_i^+}$ has the form:
+\begin{subequations}
+\begin{align}
+\label{15}
+c_i&=\frac{1}{\sqrt{M}}\sum_{k}c_ke^{ikn_i},\\
+c_i^+&=\frac{1}{\sqrt{M}}\sum_{k}c_k^+e^{-ikn_i},
+\end{align}
+\end{subequations}
+So,
+\begin{subequations}
+\begin{align}
+\label{16}
+c_i^+c_j&=\frac{1}{M}\sum_{k,k'}c_k^+c_{k'}e^{-ikn_i}e^{ik'n_j},\\
+c_ic_j^+&=\frac{1}{M}\sum_{k,k'}c_kc_{k'}^+e^{-ikn_i}e^{ik'n_j},
+\end{align}
+\end{subequations}
+Because the ground state has a definate particle number, the items of $k\ne k'$ equal to zero. That means result in equ.\ref{16} could be simplified as:
+\begin{subequations}
+\begin{align}
+\label{16}
+<\beta_i\alpha_j>&=\frac{1}{M}\sum_{k}c_k^+c_k2cos[k(n_i-n_j)]-\frac{1}{M}\sum_{k}e^{ik(n_i-n_j)},\\
+<\beta_i\beta_j>&=\frac{1}{M}\sum_{k}c_k^+c_k(2i)sin[k(n_i-n_j)]-\frac{1}{M}\sum_{k}e^{ik(n_i-n_j)},\\
+<\alpha_i\alpha_j>&=\frac{1}{M}\sum_{k}c_k^+c_k(-2i)sin[k(n_i-n_j)]+\frac{1}{M}\sum_{k}e^{ik(n_i-n_j)},\\
+<\alpha_i\beta_j>&=\frac{1}{M}\sum_{k}c_k^+c_k(-2)cos[k(n_i-n_j)]+\frac{1}{M}\sum_{k}e^{ik(n_i-n_j)}.
+\end{align}
+\end{subequations}
+For equ.18a,b and c,$j>i$ so $\frac{1}{M}\sum_{k}e^{ik(n_i-n_j)}=0$. For equ.18d, when $j>i$, $\frac{1}{M}\sum_{k}e^{ik(n_i-n_j)}=0$; when $j=i$,$\frac{1}{M}\sum_{k}e^{ik(n_i-n_j)}=1$. More analyse shows that 18b,18c equal to zero because k is symmetric about origin. Equ.\ref{6} in odd sector shows that $c_k^+c_k=1$ only for $k\in[-[M/4],[M/4]]$. If we choose $M$ equals to a odd number multiples 2, then the ground state is unique. So all the nonzero entries are listed as below.
+\begin{subequations}
+\begin{align}
+\label{19}
+<\beta_i\alpha_j>&=(1+2\times re.(\frac{e^{i\pi 2d/M}(1-e^{i\pi d/2})\times e^{-i\pi d/M}}{1-e^{i\pi 2d/M}}))\times 2/N, j>i\\
+<\alpha_i\beta_j>&=0, i=j\\
+<\alpha_i\beta_j>&=-(1+2\times re.(\frac{e^{i\pi 2d/M}(1-e^{i\pi d/2})\times e^{-i\pi d/M}}{1-e^{i\pi 2d/M}}))\times 2/N, j>i
+\end{align}
+\end{subequations}
+\subsection{Some Hints}
+Let matrix in equ.11 is A. It's such an astonishing thing that we do not need pivot operation when get the Pfaffian of matrix A, which gives us lots of convenience. For example, the size of the system is M, then we just need calculate Pfaffian once for matrix $A_{2(M-1),2(M-1)}$. All corelations could be found in the submatrix of A. As a result, the normal complexity is $M^4$($M^3$ for Pfaffian and calculate $M$ times) and under this condition the complexity is $M^3$.
+\subsection{Correlations}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{correlation_func.png}
+	\caption{correlation function}
+	\label{fig_1}
+\end{figure}
+The scaling law tells us that $correlation\sim d^{-\alpha}$,that is $log(correlation)\sim -\alpha log(d)$. So I print a new figure according to this relation.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{correlation_1.png}
+	\caption{correlation function}
+	\label{fig_1}
+\end{figure}
+The figure shows it's not a strict linear relation. So, what's the problem? The problem is that the system is still not large enough. What's more, we use periodic boundary condition so it will be inaccurate when near the boundary. How to handle this problem? Here are two different methods.
+\subsubsection{Conformal theory}
+We can modify the defination of the distance. A good way is $d'=\frac{M}{\pi}sin(\pi d/M)$. The figure below shows it's a good defination.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{correlation_2.png}
+	\caption{correlation function}
+	\label{fig_3}
+\end{figure}
+The figure gives $\alpha=0.5$ which is consistent with analytical result.
+\subsubsection{Enlarge M}
+From the calculation process before, the complexity has no relation with $M$. In fact, the complexity is just realted to the longest correlation we want. So we can just enlarge $M$ but mantain the longest correlation. For example, I set $M=55555555\times 2$ and I calculate the former $270$ spin correlations.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{correlation_4.png}
+	\caption{correlation function}
+	\label{fig_4}
+\end{figure}
+The result also shows $\alpha=0.5$.
+\end{document}
